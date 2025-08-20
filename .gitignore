@@ -1,0 +1,35 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.temp
+
+# IDE
+.vscode/
+.idea/
+
+# Node modules (si vous ajoutez des dépendances plus tard)
+node_modules/
+
+# Fichiers de configuration locaux
+.env
+.env.local
+
+# Fichiers Photoshop
+*.psd
+*.psb
+
+# Archives et fichiers volumineux
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Fichiers HEIC (format photo Apple)
+*.heic
+*.HEIC 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveLyrics - Affichage de Paroles pour Mariage</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Black.ttf') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Interface de contrôle (cachée en mode projection) -->
+        <div id="controls" class="controls">
+            <div class="control-panel">
+                <h2>Contrôles LiveLyrics</h2>
+                <div class="buttons">
+                    <button id="prevBtn" class="btn">← Précédent (←)</button>
+                    <button id="playPauseBtn" class="btn">Pause/Reprendre (Espace)</button>
+                    <button id="nextBtn" class="btn">Suivant (→)</button>
+                </div>
+                <div class="info">
+                    <span id="currentLine">Ligne: 1</span>
+                    <span id="totalLines">Total: 0</span>
+                </div>
+                <div class="settings">
+                    <button id="fullscreenBtn" class="btn">Mode Projection (F)</button>
+                    <button id="configBtn" class="btn">Configuration</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone principale d'affichage -->
+        <div id="display" class="display">
+            <div id="background" class="background">
+            </div>
+            
+            <!-- Photo d'arrière-plan -->
+            <div id="backgroundPhoto" class="background-photo"></div>
+            
+            <div id="content" class="content">
+                <div id="lyricsContainer" class="lyrics-container">
+                    <!-- Les paroles seront générées ici dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de configuration -->
+        <div id="configModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Configuration des Paroles</h2>
+                <div class="config-section">
+                    <label for="lyricsInput">Paroles (une ligne par ligne de chanson):</label>
+                    <textarea id="lyricsInput" placeholder="Entrez vos paroles ici, une ligne par ligne de chanson..."></textarea>
+                </div>
+                <div class="config-section">
+                    <label for="titleInput">Titre de la chanson:</label>
+                    <input type="text" id="titleInput" placeholder="Titre de votre chanson">
+                </div>
+                <div class="config-section">
+                    <label for="animationSelect">Style d'animation:</label>
+                    <select id="animationSelect">
+                        <option value="romantic">Romantique (cœurs et particules)</option>
+                        <option value="elegant">Élégant (particules dorées)</option>
+                        <option value="simple">Simple (fond uni)</option>
+                    </select>
+                </div>
+                <button id="saveConfig" class="btn">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
