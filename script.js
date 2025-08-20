@@ -27,19 +27,15 @@ class LiveLyrics {
 		this.playPauseBtn = document.getElementById('playPauseBtn');
 		this.nextBtn = document.getElementById('nextBtn');
 		this.fullscreenBtn = document.getElementById('fullscreenBtn');
-		this.configBtn = document.getElementById('configBtn');
+		this.resetBtn = document.getElementById('resetBtn');
 
-		// Informations
+		// Éléments d'interface
+		this.playIcon = document.getElementById('playIcon');
+		this.progressFill = document.getElementById('progressFill');
 		this.currentLineSpan = document.getElementById('currentLine');
 		this.totalLinesSpan = document.getElementById('totalLines');
+		this.songTitleSpan = document.getElementById('songTitle');
 
-		// Modal de configuration
-		this.configModal = document.getElementById('configModal');
-		this.closeBtn = document.querySelector('.close');
-		this.lyricsInput = document.getElementById('lyricsInput');
-		this.titleInput = document.getElementById('titleInput');
-		this.animationSelect = document.getElementById('animationSelect');
-		this.saveConfigBtn = document.getElementById('saveConfig');
 		this.backgroundPhoto = document.getElementById('backgroundPhoto');
 	}
 
@@ -49,18 +45,8 @@ class LiveLyrics {
 		this.nextBtn.addEventListener('click', () => this.nextLine());
 		this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
 		this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
-		this.configBtn.addEventListener('click', () => this.openConfig());
+		this.resetBtn.addEventListener('click', () => this.resetToBeginning());
 
-		// Modal de configuration
-		this.closeBtn.addEventListener('click', () => this.closeConfig());
-		this.saveConfigBtn.addEventListener('click', () => this.saveConfiguration());
-
-		// Fermer modal en cliquant à l'extérieur
-		this.configModal.addEventListener('click', (e) => {
-			if (e.target === this.configModal) {
-				this.closeConfig();
-			}
-		});
 
 		// Raccourcis clavier
 		document.addEventListener('keydown', (e) => {
@@ -93,11 +79,7 @@ class LiveLyrics {
 					e.preventDefault();
 					this.toggleFullscreen();
 					break;
-				case 'KeyC':
-					if (e.ctrlKey || e.metaKey) {
-						e.preventDefault();
-						this.openConfig();
-					}
+
 					break;
 				case 'Backspace':
 					e.preventDefault();
@@ -284,8 +266,6 @@ class LiveLyrics {
 
 	togglePlayPause() {
 		this.isPlaying = !this.isPlaying;
-		this.playPauseBtn.textContent = this.isPlaying ?
-			'Pause (Espace)' : 'Reprendre (Espace)';
 
 		if (this.isPlaying) {
 			// Mode automatique (optionnel pour le futur)
@@ -293,6 +273,9 @@ class LiveLyrics {
 		} else {
 			console.log('Mode lecture en pause');
 		}
+
+		// Mise à jour de l'interface
+		this.updatePlayIcon();
 	}
 
 	updateDisplay() {
@@ -424,8 +407,38 @@ class LiveLyrics {
 
 
 	updateInfo() {
-		this.currentLineSpan.textContent = `Ligne: ${this.currentIndex + 1}`;
-		this.totalLinesSpan.textContent = `Total: ${this.lyrics.length}`;
+		// Mise à jour des informations de base
+		this.currentLineSpan.textContent = `Ligne ${this.currentIndex + 1}`;
+		this.totalLinesSpan.textContent = `/ ${this.lyrics.length}`;
+
+		// Mise à jour de la barre de progression
+		if (this.lyrics.length > 0) {
+			const progress = ((this.currentIndex + 1) / this.lyrics.length) * 100;
+			this.progressFill.style.width = `${progress}%`;
+		}
+
+		// Mise à jour du titre de la chanson
+		this.songTitleSpan.textContent = this.title || 'Aucune chanson';
+
+
+
+		// Mise à jour de l'icône de lecture
+		this.updatePlayIcon();
+	}
+
+	updatePlayIcon() {
+		if (this.playIcon) {
+			this.playIcon.textContent = this.isPlaying ? '⏸' : '▶';
+		}
+	}
+
+
+
+	resetToBeginning() {
+		this.currentIndex = 0;
+		this.isPlaying = false;
+		this.updateDisplay();
+		this.saveToLocalStorage();
 	}
 
 	toggleFullscreen() {
@@ -441,48 +454,9 @@ class LiveLyrics {
 	updateFullscreenUI() {
 		const isFullscreen = !!document.fullscreenElement;
 		document.body.classList.toggle('fullscreen', isFullscreen);
-		this.fullscreenBtn.textContent = isFullscreen ?
-			'Quitter Plein Écran (F)' : 'Mode Projection (F)';
 	}
 
-	openConfig() {
-		// Extraire seulement le texte des paroles pour l'affichage
-		const lyricsText = this.lyrics.map(lyric => lyric.text).join('\n');
-		this.lyricsInput.value = lyricsText;
-		this.titleInput.value = this.title;
-		this.animationSelect.value = this.animationStyle;
-		this.configModal.style.display = 'block';
-	}
 
-	closeConfig() {
-		this.configModal.style.display = 'none';
-	}
-
-	saveConfiguration() {
-		const lyricsText = this.lyricsInput.value.trim();
-		// Convertir le texte en format JSON avec structure
-		const lines = lyricsText ? lyricsText.split('\n') : [];
-		this.lyrics = lines.map(line => ({
-			text: line,
-			singer: 'duo',
-			color: 'violet'
-		}));
-
-		this.title = this.titleInput.value.trim() || 'Chanson de Mariage';
-		this.animationStyle = this.animationSelect.value;
-
-		// Réinitialiser l'index si nécessaire
-		if (this.currentIndex >= this.lyrics.length) {
-			this.currentIndex = Math.max(0, this.lyrics.length - 1);
-		}
-
-		this.updateAnimationStyle();
-		this.updateDisplay();
-		this.closeConfig();
-
-		// Sauvegarder dans le localStorage
-		this.saveToLocalStorage();
-	}
 
 	updateAnimationStyle() {
 		document.body.className = document.body.className

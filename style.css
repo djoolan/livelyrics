@@ -22,15 +22,16 @@ body {
 /* Interface de contrôle */
 .controls {
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 10px;
-    padding: 10px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 280px;
 }
 
 .controls.hidden {
@@ -39,53 +40,150 @@ body {
     transform: translateY(-20px);
 }
 
-.control-panel h2 {
-    font-family: 'Dancing Script', cursive;
-    color: #ff6b9d;
-    margin-bottom: 10px;
-    font-size: 1.2em;
+
+
+
+
+.control-content {
+    padding: 16px 20px 20px;
 }
 
-.buttons {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
+/* Barre de progression */
+.progress-section {
+    margin-bottom: 20px;
 }
 
-.btn {
-    background: linear-gradient(45deg, #ff6b9d, #c471ed);
-    border: none;
-    padding: 6px 10px;
-    border-radius: 15px;
-    color: white;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-.info {
-    display: flex;
-    gap: 10px;
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
     margin-bottom: 8px;
-    font-size: 11px;
-    color: #ccc;
 }
 
-.settings {
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b9d, #c471ed);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-info {
     display: flex;
-    gap: 5px;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+/* Contrôles principaux */
+.main-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.prev-btn, .next-btn {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.play-btn {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(45deg, #ff6b9d, #c471ed);
+    color: white;
+    box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+.btn-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.play-btn .btn-icon {
+    font-size: 20px;
+}
+
+/* Contrôles secondaires */
+.secondary-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
+}
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn-text {
+    font-weight: 500;
+}
+
+/* Informations supplémentaires */
+.additional-info {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 12px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+
+.info-label {
+    color: #888;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Zone d'affichage principale */
@@ -290,84 +388,7 @@ body {
     color: #cc99cc;
 }
 
-/* Modal de configuration */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-}
 
-.modal-content {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    margin: 5% auto;
-    padding: 30px;
-    border-radius: 20px;
-    width: 80%;
-    max-width: 600px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close:hover {
-    color: #ff6b9d;
-}
-
-.modal-content h2 {
-    font-family: 'Dancing Script', cursive;
-    color: #ff6b9d;
-    margin-bottom: 20px;
-    font-size: 2em;
-}
-
-.config-section {
-    margin-bottom: 20px;
-}
-
-.config-section label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: white;
-}
-
-.config-section textarea,
-.config-section input,
-.config-section select {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-family: inherit;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.config-section textarea {
-    height: 150px;
-    resize: vertical;
-}
-
-.config-section textarea::placeholder,
-.config-section input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
 
 /* Mode plein écran */
 .fullscreen .controls {

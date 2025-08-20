@@ -50,19 +50,53 @@
         <!-- Interface de contrôle (cachée en mode projection) -->
         <div id="controls" class="controls">
             <div class="control-panel">
-                <h2>Contrôles LiveLyrics</h2>
-                <div class="buttons">
-                    <button id="prevBtn" class="btn">← Précédent (←)</button>
-                    <button id="playPauseBtn" class="btn">Pause/Reprendre (Espace)</button>
-                    <button id="nextBtn" class="btn">Suivant (→)</button>
-                </div>
-                <div class="info">
-                    <span id="currentLine">Ligne: 1</span>
-                    <span id="totalLines">Total: 0</span>
-                </div>
-                <div class="settings">
-                    <button id="fullscreenBtn" class="btn">Mode Projection (F)</button>
-                    <button id="configBtn" class="btn">Configuration</button>
+
+                
+                <div class="control-content">
+                    <!-- Informations de progression -->
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span id="currentLine">Ligne 1</span>
+                            <span id="totalLines">/ 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Contrôles principaux -->
+                    <div class="main-controls">
+                        <button id="prevBtn" class="control-btn prev-btn" title="Précédent (←)">
+                            <span class="btn-icon">⏮</span>
+                        </button>
+                        <button id="playPauseBtn" class="control-btn play-btn" title="Pause/Reprendre (Espace)">
+                            <span class="btn-icon" id="playIcon">⏸</span>
+                        </button>
+                        <button id="nextBtn" class="control-btn next-btn" title="Suivant (→)">
+                            <span class="btn-icon">⏭</span>
+                        </button>
+                    </div>
+
+                    <!-- Contrôles secondaires -->
+                    <div class="secondary-controls">
+                        <button id="fullscreenBtn" class="control-btn secondary-btn" title="Mode Projection (F)">
+                            <span class="btn-icon">🖥</span>
+                            <span class="btn-text">Projection</span>
+                        </button>
+
+                        <button id="resetBtn" class="control-btn secondary-btn" title="Recommencer">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Reset</span>
+                        </button>
+                    </div>
+
+                    <!-- Informations supplémentaires -->
+                    <div class="additional-info">
+                        <div class="info-item">
+                            <span class="info-label">Titre:</span>
+                            <span id="songTitle" class="info-value">Aucune chanson</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,30 +116,7 @@
             </div>
         </div>
 
-        <!-- Modal de configuration -->
-        <div id="configModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Configuration des Paroles</h2>
-                <div class="config-section">
-                    <label for="lyricsInput">Paroles (une ligne par ligne de chanson):</label>
-                    <textarea id="lyricsInput" placeholder="Entrez vos paroles ici, une ligne par ligne de chanson..."></textarea>
-                </div>
-                <div class="config-section">
-                    <label for="titleInput">Titre de la chanson:</label>
-                    <input type="text" id="titleInput" placeholder="Titre de votre chanson">
-                </div>
-                <div class="config-section">
-                    <label for="animationSelect">Style d'animation:</label>
-                    <select id="animationSelect">
-                        <option value="romantic">Romantique (cœurs et particules)</option>
-                        <option value="elegant">Élégant (particules dorées)</option>
-                        <option value="simple">Simple (fond uni)</option>
-                    </select>
-                </div>
-                <button id="saveConfig" class="btn">Sauvegarder</button>
-            </div>
-        </div>
+
     </div>
 
     <script src="script.js"></script>
