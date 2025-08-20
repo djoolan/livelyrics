@@ -263,7 +263,7 @@ body {
 }
 
 /* Dégradé horizontal derrière les paroles */
-.content::before {
+/* .content::before {
     content: '';
     position: absolute;
 	display: block;
@@ -281,7 +281,7 @@ body {
         rgba(0, 0, 0, 0.1) 100%);
     pointer-events: none;
     z-index: 1;
-}
+} */
 
 /* Dégradé noir vers transparent par-dessus le contenu */
 /* .content::after {
