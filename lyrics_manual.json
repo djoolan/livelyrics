@@ -1,17 +1,6 @@
 {
   "title": "Chanson pour Véronica - Julien & Valérie",
   "lyrics": [
-    {
-	  "text": ""
-	},
-	{
-	  "text": "",
-	  "photo": "baltrings.jpg"
-	},
-	{
-	  "text": "",
-	  "photo": "thegrand.jpg"
-	},
 	{
       "text": " | | | | | | | | | | | &"
     },
@@ -145,7 +134,7 @@
       "text": "Un peu d'Almodovar,|et puis quelques séries",
       "singer": "julien",
       "color": "blue",
-      "photo": "penelope.jpg"
+      "photo": "almodovar.jpg"
     },
     {
       "text": "Par contre pour la musique,|faut appeler Interpol",
@@ -180,7 +169,8 @@
     {
       "text": "Une journée sans soleil,|et tu t'crois en hiver",
       "singer": "valerie",
-      "color": "red"
+      "color": "red",
+      "photo": "soleil.jpg"
     },
     {
       "text": "Une soirée sans ton plaid,|c'est ça pour toi l'enfer",
@@ -207,7 +197,7 @@
       "photo": "noces.jpg"
     },
     {
-      "text": "Je prendrais un vetonica|si j't'emmène au Connemara",
+      "text": "Je prendrais un \"vetonica\"|si j't'emmène au Connemara",
       "singer": "julien",
       "color": "blue",
       "photo": "vetonica.jpg"

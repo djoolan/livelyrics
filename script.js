@@ -5,13 +5,17 @@ class LiveLyrics {
 		this.isPlaying = false;
 		this.animationStyle = 'romantic';
 		this.title = '';
+		this.imageCache = new Map(); // Cache pour les images préchargées
+		this.baltringsElement = null; // Élément pour baltrings.jpg
+		this.thegrandElement = null; // Élément pour thegrand.jpg
 
 		this.initializeElements();
 		this.setupEventListeners();
 		this.loadSampleLyrics();
 		// Charger les données sauvegardées après l'initialisation
 		this.loadFromLocalStorage();
-		this.updateDisplay();
+		this.preloadImages(); // Précharger les images
+		// Note: updateDisplay() sera appelé après le préchargement des images
 	}
 
 	initializeElements() {
@@ -36,6 +40,10 @@ class LiveLyrics {
 		this.totalLinesSpan = document.getElementById('totalLines');
 		this.songTitleSpan = document.getElementById('songTitle');
 
+		// Éléments de chargement
+		this.loadingIndicator = document.getElementById('loadingIndicator');
+		this.loadingProgressBar = document.getElementById('loadingProgressBar');
+
 		this.backgroundPhoto = document.getElementById('backgroundPhoto');
 	}
 
@@ -57,6 +65,26 @@ class LiveLyrics {
 				this.hideNoShoot();
 				// Ne pas exécuter l'action normale de la touche si c'est E
 				if (e.code === 'KeyE') {
+					e.preventDefault();
+					return;
+				}
+			}
+
+			// Si baltrings est affiché, le masquer pour toute touche
+			if (this.baltringsElement && this.baltringsElement.style.display === 'block') {
+				this.hideBaltrings();
+				// Ne pas exécuter l'action normale de la touche si c'est B
+				if (e.code === 'KeyB') {
+					e.preventDefault();
+					return;
+				}
+			}
+
+			// Si thegrand est affiché, le masquer pour toute touche
+			if (this.thegrandElement && this.thegrandElement.style.display === 'block') {
+				this.hideTheGrand();
+				// Ne pas exécuter l'action normale de la touche si c'est G
+				if (e.code === 'KeyG') {
 					e.preventDefault();
 					return;
 				}
@@ -96,6 +124,14 @@ class LiveLyrics {
 				case 'KeyE':
 					e.preventDefault();
 					this.showNoShoot();
+					break;
+				case 'KeyB':
+					e.preventDefault();
+					this.toggleBaltrings();
+					break;
+				case 'KeyG':
+					e.preventDefault();
+					this.toggleTheGrand();
 					break;
 			}
 		});
@@ -226,6 +262,76 @@ class LiveLyrics {
 		this.title = "Chanson pour Véronica - Julien & Valérie";
 		this.updateInfo();
 		console.log('Paroles intégrées chargées:', this.lyrics.length, 'lignes');
+	}
+
+	preloadImages() {
+		console.log('Début du préchargement des images...');
+
+		// Liste des images utilisées dans les paroles
+		const imageList = [
+			'15ans-01.jpg', '15ans-02.jpg', '15ans-03.jpg', '15ans-04.jpg', '15ans-05.jpg',
+			'15ans-06.jpg', '15ans-07.jpg', '15ans-08.jpg', '15ans-09.jpg', '15ans-10.jpg',
+			'15ans-11.jpg', '15ans-12.jpg', 'amis.jpg', 'chanter.jpg', 'chica.jpg',
+			'mains.jpg', 'penelope.jpg', 'interpol.jpg', 'shakira.jpg', 'compagnie-creole.jpg',
+			'isotoner.jpg', 'pull-over.jpg', 'plaid.jpg', 'voyage.jpg', 'japon.jpg',
+			'vetonica.jpg', 'begles.jpg', 'ephemere.jpg', 'rencontre.jpg', 'mariniere.jpg',
+			'flamenco.jpg', 'magret.jpg', 'serrano.jpg', 'thegrand.jpg', 'baltrings.jpg',
+			'tapas.jpg', 'manhattan.jpg', 'poids.jpg', 'theatre.jpg', 'no-shoot.jpg'
+		];
+
+		let loadedCount = 0;
+		const totalImages = imageList.length;
+
+		// Fonction pour créer et précharger une image
+		const preloadImage = (imageName) => {
+			return new Promise((resolve, reject) => {
+				const img = new Image();
+
+				img.onload = () => {
+					this.imageCache.set(imageName, img);
+					loadedCount++;
+
+					// Mettre à jour la barre de progression
+					const progress = (loadedCount / totalImages) * 100;
+					if (this.loadingProgressBar) {
+						this.loadingProgressBar.style.width = `${progress}%`;
+					}
+
+					console.log(`Image préchargée: ${imageName} (${loadedCount}/${totalImages})`);
+					resolve(img);
+				};
+
+				img.onerror = () => {
+					console.warn(`Impossible de précharger l'image: ${imageName}`);
+					reject(new Error(`Échec du chargement: ${imageName}`));
+				};
+
+				// Démarrer le chargement
+				img.src = `photos/${imageName}`;
+			});
+		};
+
+		// Précharger toutes les images en parallèle
+		const preloadPromises = imageList.map(imageName =>
+			preloadImage(imageName).catch(error => {
+				console.warn(`Erreur lors du préchargement de ${imageName}:`, error);
+				return null; // Continuer même si une image échoue
+			})
+		);
+
+		// Attendre que toutes les images soient chargées
+		Promise.allSettled(preloadPromises).then(results => {
+			const successful = results.filter(result => result.status === 'fulfilled').length;
+			console.log(`Préchargement terminé: ${successful}/${totalImages} images chargées avec succès`);
+
+			// Masquer l'indicateur de chargement
+			if (this.loadingIndicator) {
+				this.loadingIndicator.classList.add('hidden');
+			}
+
+			// Mettre à jour l'affichage une fois les images préchargées
+			this.updateDisplay();
+		});
 	}
 
 	loadFallbackLyrics() {
@@ -369,11 +475,19 @@ class LiveLyrics {
 		// Attendre un peu que la transition de masquage se termine
 		setTimeout(() => {
 			if (currentLyric.photo) {
-				// Changer l'image de fond
-				this.backgroundPhoto.style.backgroundImage = `url('photos/${currentLyric.photo}')`;
+				// Vérifier si l'image est dans le cache
+				if (this.imageCache.has(currentLyric.photo)) {
+					// Utiliser l'image du cache (plus rapide)
+					const cachedImg = this.imageCache.get(currentLyric.photo);
+					this.backgroundPhoto.style.backgroundImage = `url('${cachedImg.src}')`;
+					console.log('Photo affichée depuis le cache:', currentLyric.photo);
+				} else {
+					// Fallback vers le chargement normal
+					this.backgroundPhoto.style.backgroundImage = `url('photos/${currentLyric.photo}')`;
+					console.log('Photo affichée (fallback):', currentLyric.photo);
+				}
 				// Puis afficher la nouvelle photo
 				this.backgroundPhoto.classList.add('active');
-				console.log('Photo affichée:', currentLyric.photo);
 			} else {
 				// Pas de photo, on garde masqué
 				console.log('Photo masquée');
@@ -537,6 +651,90 @@ class LiveLyrics {
 			console.log('No-shoot masqué');
 		}
 	}
+
+	toggleBaltrings() {
+		if (this.baltringsElement && this.baltringsElement.style.display === 'block') {
+			this.hideBaltrings();
+		} else {
+			this.showBaltrings();
+		}
+	}
+
+	showBaltrings() {
+		console.log('showBaltrings');
+		// Créer l'élément baltrings s'il n'existe pas
+		if (!this.baltringsElement) {
+			this.baltringsElement = document.createElement('div');
+			this.baltringsElement.id = 'baltringsOverlay';
+			this.baltringsElement.style.cssText = `
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background-image: url('photos/baltrings.jpg');
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				z-index: 9999;
+				display: none;
+			`;
+			document.body.appendChild(this.baltringsElement);
+		}
+
+		// Afficher l'overlay
+		this.baltringsElement.style.display = 'block';
+		console.log('Baltrings affiché');
+	}
+
+	hideBaltrings() {
+		if (this.baltringsElement) {
+			this.baltringsElement.style.display = 'none';
+			console.log('Baltrings masqué');
+		}
+	}
+
+	toggleTheGrand() {
+		if (this.thegrandElement && this.thegrandElement.style.display === 'block') {
+			this.hideTheGrand();
+		} else {
+			this.showTheGrand();
+		}
+	}
+
+	showTheGrand() {
+		console.log('showTheGrand');
+		// Créer l'élément thegrand s'il n'existe pas
+		if (!this.thegrandElement) {
+			this.thegrandElement = document.createElement('div');
+			this.thegrandElement.id = 'thegrandOverlay';
+			this.thegrandElement.style.cssText = `
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background-image: url('photos/thegrand.jpg');
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				z-index: 9999;
+				display: none;
+			`;
+			document.body.appendChild(this.thegrandElement);
+		}
+
+		// Afficher l'overlay
+		this.thegrandElement.style.display = 'block';
+		console.log('The Grand affiché');
+	}
+
+	hideTheGrand() {
+		if (this.thegrandElement) {
+			this.thegrandElement.style.display = 'none';
+			console.log('The Grand masqué');
+		}
+	}
 }
 
 // Initialisation de l'application
@@ -551,8 +749,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	console.log('← → : Navigation');
 	console.log('Espace : Slide suivante');
 	console.log('F : Plein écran');
-	console.log('Ctrl+C : Configuration');
-	console.log('Z : Afficher no-shoot');
-	console.log('Échap : Quitter plein écran/fermer modal/masquer no-shoot');
+	console.log('E : Afficher/masquer no-shoot');
+	console.log('B : Afficher/masquer baltrings');
+	console.log('G : Afficher/masquer thegrand');
+	console.log('Échap : Quitter plein écran/fermer modal/masquer overlays');
 	console.log('Backspace : Retour au début');
 }); 

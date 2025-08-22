@@ -47,6 +47,17 @@
 </head>
 <body>
     <div id="app">
+        <!-- Indicateur de chargement -->
+        <div id="loadingIndicator" class="loading-indicator">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Chargement des images...</div>
+                <div class="loading-progress">
+                    <div id="loadingProgressBar" class="loading-progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Interface de contrôle (cachée en mode projection) -->
         <div id="controls" class="controls">
             <div class="control-panel">
@@ -118,6 +129,9 @@
 
 
     </div>
+
+    <!-- Signature discrète -->
+    <div class="signature">VERONICA & JULIEN - 23.08.25</div>
 
     <script src="script.js"></script>
 </body>
