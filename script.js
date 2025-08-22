@@ -267,16 +267,21 @@ class LiveLyrics {
 	preloadImages() {
 		console.log('Début du préchargement des images...');
 
-		// Liste des images utilisées dans les paroles
+		// Liste complète des images disponibles
 		const imageList = [
+			// Images des 15 ans
 			'15ans-01.jpg', '15ans-02.jpg', '15ans-03.jpg', '15ans-04.jpg', '15ans-05.jpg',
 			'15ans-06.jpg', '15ans-07.jpg', '15ans-08.jpg', '15ans-09.jpg', '15ans-10.jpg',
-			'15ans-11.jpg', '15ans-12.jpg', 'amis.jpg', 'chanter.jpg', 'chica.jpg',
-			'mains.jpg', 'penelope.jpg', 'interpol.jpg', 'shakira.jpg', 'compagnie-creole.jpg',
+			'15ans-11.jpg', '15ans-12.jpg', '15ans-1.jpg',
+
+			// Images thématiques
+			'amis.jpg', 'chanter.jpg', 'chica.jpg', 'mains.jpg', 'penelope.jpg',
+			'interpol.jpg', 'shakira.jpg', 'compagnie-creole.jpg', 'compagnie.jpg',
 			'isotoner.jpg', 'pull-over.jpg', 'plaid.jpg', 'voyage.jpg', 'japon.jpg',
 			'vetonica.jpg', 'begles.jpg', 'ephemere.jpg', 'rencontre.jpg', 'mariniere.jpg',
 			'flamenco.jpg', 'magret.jpg', 'serrano.jpg', 'thegrand.jpg', 'baltrings.jpg',
-			'tapas.jpg', 'manhattan.jpg', 'poids.jpg', 'theatre.jpg', 'no-shoot.jpg'
+			'tapas.jpg', 'manhattan.jpg', 'poids.jpg', 'theatre.jpg', 'no-shoot.jpg',
+			'almodovar.jpg', 'soleil.jpg', 'noces.jpg'
 		];
 
 		let loadedCount = 0;
